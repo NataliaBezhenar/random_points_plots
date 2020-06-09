@@ -1,46 +1,50 @@
 import matplotlib.pyplot as plt
 from random_walk import RandomWalk
 
-def set_common_conditions(ax):
-    for i in range(len(ax)):
-        ax[i].set_facecolor('black')
-        ax[i].scatter(0, 0, c='green', edgecolors='none', s=100)
+
+def set_common_conditions(axes, rw_objects_list):
+    for axs in range(len(axes)):
+        ax[axs].set_facecolor('black')
+        ax[axs].scatter(0, 0, c='green', edgecolors='none', s=100)
+        ax[axs].scatter(rw_objects_list[axs].x_values[-1], rw_objects_list[axs].y_values[-1], c='red',
+                        edgecolors='none', s=100)
+
+
+def create_objects(axes, points_number=500):
+    rw_obj_list = []
+    rws = []
+    for axs in range(len(axes)):
+        rw_obj_list.append(RandomWalk(points_number))
+    for rw_list_object in rw_obj_list:
+        rw_list_object.fill_walk()
+        rws.append(rw_list_object)
+    return rws
 
 
 while True:
-    rw = RandomWalk(500)
-    rw1 = RandomWalk(500)
-    rw2 = RandomWalk(500)
-    rw3 = RandomWalk(500)
-    rw.fill_walk()
-    rw1.fill_walk()
-    rw2.fill_walk()
-    rw3.fill_walk()
     fig, ax = plt.subplots(4, 1)
     fig.suptitle("Random walking plots", fontsize=16)
-    point_numbers = list(range(rw.num_points))
-    ax[0].scatter(rw.x_values, rw.y_values, c=point_numbers, cmap=plt.cm.Blues, edgecolor='none', s=16)
-    # Highlighting of the first and last points
-    ax[0].scatter(0, 0, c='green', edgecolors='none', s=100)
-    ax[0].scatter(rw.x_values[-1], rw.y_values[-1], c='red', edgecolors='none', s=100)
-
     fig.set_figwidth(10)
     fig.set_figheight(10)
+    rw_list = create_objects(ax)
 
-    set_common_conditions(ax)
+    for i in range(len(ax)):
+        if (i + 1) % 4 == 0:
+            ax[i].scatter(rw_list[i].x_values, rw_list[i].y_values, marker='X', c=list(range(rw_list[i].num_points)),
+                          cmap=plt.cm.plasma, edgecolor='none', s=40)
+        elif (i + 1) % 3 == 0:
+            ax[i].scatter(rw_list[i].x_values, rw_list[i].y_values, marker='o', c=list(range(rw_list[i].num_points)),
+                          cmap=plt.cm.RdPu, edgecolor='none', s=40)
+        elif (i + 1) % 2 == 0:
+            ax[i].scatter(rw_list[i].x_values, rw_list[i].y_values, marker='*', c=list(range(rw_list[i].num_points)),
+                          cmap=plt.cm.Oranges, edgecolor='none', s=40)
+        else:
+            ax[i].scatter(rw_list[i].x_values, rw_list[i].y_values, c=list(range(rw_list[i].num_points)),
+                          cmap=plt.cm.Blues, edgecolor='none', s=16)
 
-    ax[1].scatter(rw1.x_values, rw1.y_values, marker='*', c=point_numbers, cmap=plt.cm.Oranges, edgecolor='none', s=40)
-    ax[2].scatter(rw2.x_values, rw2.y_values, marker='o', c=point_numbers, cmap=plt.cm.RdPu, edgecolor='none', s=40)
-    ax[3].scatter(rw3.x_values, rw3.y_values, marker='X', c=point_numbers, cmap=plt.cm.plasma, edgecolor='none', s=40)
-
-    ax[1].scatter(0, 0, c='green', edgecolors='none', s=100)
-    ax[1].scatter(rw1.x_values[-1], rw1.y_values[-1], c='red', edgecolors='none', s=100)
-    ax[2].scatter(0, 0, c='green', edgecolors='none', s=100)
-    ax[2].scatter(rw2.x_values[-1], rw2.y_values[-1], c='red', edgecolors='none', s=100)
-    ax[3].scatter(0, 0, c='green', edgecolors='none', s=100)
-    ax[3].scatter(rw3.x_values[-1], rw3.y_values[-1], c='red', edgecolors='none', s=100)
-
+    set_common_conditions(ax, rw_list)
     plt.show()
+
     keep_running = input("Another walk?(y/n):")
     if keep_running == 'n':
         break
