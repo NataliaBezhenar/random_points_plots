@@ -12,13 +12,11 @@ def set_common_conditions(axes, rw_objects_list):
 
 def create_objects(axes, points_number=500):
     rw_obj_list = []
-    rws = []
     for axs in range(len(axes)):
         rw_obj_list.append(RandomWalk(points_number))
     for rw_list_object in rw_obj_list:
         rw_list_object.fill_walk()
-        rws.append(rw_list_object)
-    return rws
+    return rw_obj_list
 
 
 while True:
